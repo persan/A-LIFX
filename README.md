@@ -1,5 +1,5 @@
 # A-LIFX
-This i a library for controling with the LIFX smart bulbs.
+This i a library for controling the LIFX smart bulbs.
 
 For info on the  bulbs see:
   http://www.lifx.com/

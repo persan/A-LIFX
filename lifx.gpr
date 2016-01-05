@@ -3,7 +3,7 @@ with "stream_tools";
 library project LIFX is
 
         version := "0.0.1";
-        for Languages use ("Ada", "Makefile","Python");
+        for Languages use ("Ada", "Makefile","Python","text");
         for Source_Dirs use (".","src");
         for Object_Dir use ".obj";
         for Library_Dir use "lib";
@@ -23,9 +23,11 @@ library project LIFX is
    end Pretty_Printer;
 
         package Naming is
+                for Implementation_Suffix ("text") use ".text";
                 for Implementation_Suffix ("Python") use ".py";
                 for Implementation_Suffix ("Makefile") use ".mk";
                 for Implementation_Exceptions("Makefile") use ("Makefile");
+                for Implementation_Exceptions("text") use ("README.md");
         end Naming;
 
 end LIFX;
