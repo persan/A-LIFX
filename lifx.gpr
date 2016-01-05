@@ -1,0 +1,27 @@
+with "stream_tools";
+
+library project LIFX is
+
+        version := "0.0.1";
+        for Languages use ("Ada", "Makefile","Python");
+        for Source_Dirs use (".","src");
+        for Object_Dir use ".obj";
+        for Library_Dir use "lib";
+        for Library_Name use "a-lifx";
+
+        package compiler is
+                for Driver ("Python") use "";
+                for Driver ("Makefile") use "";
+                for Default_Switches("Ada") use ("-gnatwa","-O2");
+        end Compiler;
+                package Make is
+                for Makefile use "Makefile";
+        end Make;
+
+        package Naming is
+                for Implementation_Suffix ("Python") use ".py";
+                for Implementation_Suffix ("Makefile") use ".mk";
+                for Implementation_Exceptions("Makefile") use ("Makefile");
+        end Naming;
+
+end LIFX;

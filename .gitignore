@@ -1,5 +1,8 @@
-# Object file
-*.o
+.obj
+lib/*
+*~
+*.db
+tests/.obj
+tests/bin/*
+*.pyc
 
-# Ada Library Information
-*.ali
