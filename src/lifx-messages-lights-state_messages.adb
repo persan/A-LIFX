@@ -5,19 +5,16 @@ package body LIFX.Messages.Lights.State_Messages is
    -----------------
    -- Constructor --
    -----------------
-   procedure Initialize (Msg : in  out State_Message) is
+   overriding procedure Initialize (Msg : in out State_Message) is
    begin
       Msg.Header.Protocol_Header.Msg_Type := LIFX.Messages.Constants.Light_Messages.SetPower;
-      Msg.Header.Frame.Size := Msg.Header'Size / 8;
-   end;
+      Msg.Header.Frame.Size               := Msg.Header'Size / 8;
+   end Initialize;
 
-   function Constructor
-     (Params : not null access Ada.Streams.Root_Stream_Type'Class)
-      return State_Message
-   is
+   overriding function Constructor (Params : not null access Ada.Streams.Root_Stream_Type'Class) return State_Message is
    begin
       return Ret : State_Message do
-         HSBK_TYPE'Read (Params, Ret.color);
+         HSBK_Type'Read (Params, Ret.color);
          Uint16'Read (Params, Ret.Reserved_1);
          Uint16'Read (Params, Ret.Power);
          String'Read (Params, Ret.Label);
@@ -25,28 +22,34 @@ package body LIFX.Messages.Lights.State_Messages is
       end return;
    end Constructor;
 
-   function Image ( Item : State_Message ) return String is
+   overriding function Image (Item : State_Message) return String is
    begin
-      return Image (Message (Item)) & ASCII.Lf &
-        "Color    => (" & Image (Item.Color) & ")," & ASCII.Lf &
-        "Power    => " & image(Item.Power) & "," & ASCII.Lf &
-        "Label => "    & image(Item.Label);
-   end;
+      return Image (Message (Item)) &
+        ASCII.LF &
+        "Color    => (" &
+        Image (Item.color) &
+        ")," &
+        ASCII.LF &
+        "Power    => " &
+        Image (Item.Power) &
+        "," &
+        ASCII.LF &
+        "Label => " &
+        Image (Item.Label);
+   end Image;
 
-   function Create
-     (Color : HSBK_TYPE; Power : Float ; Label : String)
-      return State_Message is
+   function Create (color : HSBK_Type; Power : Float; Label : String) return State_Message is
    begin
       return Ret : State_Message do
-         Ret.Color := Color;
+         Ret.color := color;
          Ret.Power := Uint16 (Float (Uint16'Last) * Power);
          Ada.Strings.Fixed.Move (Label, Ret.Label);
          Ret.Header.Frame_Address.Res_Required := True;
          Ret.Header.Frame_Address.Ack_Required := False;
-         Ret.Header.Frame_Address.Sequence := Sequence;
+         Ret.Header.Frame_Address.Sequence     := Sequence;
       end return;
-   end;
+   end Create;
 
 begin
-   LIFX.Messages.Register_Name (LIFX.Messages.Constants.Light_Messages.State,State_Message'Tag);
+   LIFX.Messages.Register_Name (LIFX.Messages.Constants.Light_Messages.State, State_Message'Tag);
 end LIFX.Messages.Lights.State_Messages;

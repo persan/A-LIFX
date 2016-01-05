@@ -1,15 +1,14 @@
+with Ada.Tags;
 with GNAT.IO;
 with GNAT.Source_Info;
-with Ada.Tags;
--- with LIFX.Messages.GetService_Messages;
+
 package body LIFX.Bulbs is
    use GNAT.Sockets;
 
-   procedure Finalize   (Self : in out Bulbs_Record) is
+   overriding procedure Finalize (Self : in out Bulbs_Record) is
    begin
       null;
-   end;
-
+   end Finalize;
 
    -------------------
    -- Query_Network --
@@ -34,10 +33,10 @@ package body LIFX.Bulbs is
       return Image (Self);
    end Image;
 
-   procedure On_Message (Self : Bulbs_Record ; Message : LIFX.Messages.Message'Class) is
+   procedure On_Message (Self : Bulbs_Record; Message : LIFX.Messages.Message'Class) is
       pragma Unreferenced (Self);
    begin
       pragma Debug (GNAT.IO.Put_Line (GNAT.Source_Info.Enclosing_Entity & "(" & Ada.Tags.External_Tag (Message'Tag) & ")"));
-   end;
+   end On_Message;
 
 end LIFX.Bulbs;

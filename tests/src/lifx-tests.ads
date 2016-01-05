@@ -1,2 +1,2 @@
-package Lifx.Tests is
-end lifx.tests;
+package LIFX.Tests is
+end LIFX.Tests;

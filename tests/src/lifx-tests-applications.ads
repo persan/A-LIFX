@@ -11,7 +11,7 @@ with GNAT.Source_Info;
 with LIFX.Messages.StatePower_Messages;
 with LIFX.Messages.StateWifiFirmware_Messages;
 with LIFX.Messages.StateWifiInfo_Messages;
-package Lifx.Tests.Applications is
+package LIFX.Tests.Applications is
    type Test_App is limited new LIFX.Messages.Dispatchers.Message_Handler with record
       Server            : GNAT.Sockets.Socket_Type;
       Buffer            : Ada.Streams.Stream_Element_Array (1 .. 1024);
@@ -62,7 +62,6 @@ package Lifx.Tests.Applications is
       Message  : LIFX.Messages.Message'Class;
       Location : String := GNAT.Source_Info.Enclosing_Entity);
 
-
 --     task type App is new LIFX.Messages.Dispatchers.Message_Handler with
 --        entry On_State
 --          (Message : LIFX.Messages.Lights.State_Messages.State_Message);
@@ -73,4 +72,4 @@ package Lifx.Tests.Applications is
 --        entry On_StateGroup
 --          (Message : LIFX.Messages.StateGroup_Messages.StateGroup_Message);
 --     end App;
-end Lifx.Tests.Applications;
+end LIFX.Tests.Applications;

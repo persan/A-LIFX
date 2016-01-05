@@ -1,9 +1,10 @@
-with Ada.Strings.Unbounded;
 with Ada.Containers.Vectors;
-with GNAT.Sockets;
 with Ada.Finalization;
+with Ada.Strings.Unbounded;
+with GNAT.Sockets;
 with LIFX.Messages;
-package LIFX.Bulbs  is
+
+package LIFX.Bulbs is
    type Bulb is tagged record
       Name    : Ada.Strings.Unbounded.Unbounded_String;
       Address : GNAT.Sockets.Inet_Addr_Type;
@@ -19,11 +20,11 @@ package LIFX.Bulbs  is
 private
 
    type Bulbs_Record is new Ada.Finalization.Limited_Controlled with record
-      Bulbs         : Bulb_Vectors.Vector;
+      Bulbs : Bulb_Vectors.Vector;
    end record;
 
-   procedure On_Message (Self : Bulbs_Record ; Message : LIFX.Messages.Message'Class);
+   procedure On_Message (Self : Bulbs_Record; Message : LIFX.Messages.Message'Class);
 --    procedure Initialize (Self : in out Bulbs_Record);
-   procedure Finalize   (Self : in out Bulbs_Record);
+   overriding procedure Finalize (Self : in out Bulbs_Record);
 
 end LIFX.Bulbs;

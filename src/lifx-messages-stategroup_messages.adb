@@ -5,18 +5,23 @@ package body LIFX.Messages.StateGroup_Messages is
    -- Constructor --
    -----------------
 
-   function Image ( Item : StateGroup_Message ) return String is
+   overriding function Image (Item : StateGroup_Message) return String is
    begin
-      return Image (Message (Item)) & ASCII.Lf &
-        "group      => " & image(Item.group) &","  &ASCII.Lf &
-        "Label      => """ & image(Item.Label) & """" & ASCII.Lf &
-        "updated_at => " & image(item.Updated_At);
-   end;
+      return Image (Message (Item)) &
+        ASCII.LF &
+        "group      => " &
+        Image (Item.Group) &
+        "," &
+        ASCII.LF &
+        "Label      => """ &
+        Image (Item.Label) &
+        """" &
+        ASCII.LF &
+        "updated_at => " &
+        Image (Item.Updated_At);
+   end Image;
 
-   function Constructor
-     (Params : not null access Ada.Streams.Root_Stream_Type'Class)
-      return StateGroup_Message
-   is
+   overriding function Constructor (Params : not null access Ada.Streams.Root_Stream_Type'Class) return StateGroup_Message is
    begin
       return Ret : StateGroup_Message do
          Ada.Streams.Stream_Element_Array'Read (Params, Ret.Group);
@@ -25,7 +30,6 @@ package body LIFX.Messages.StateGroup_Messages is
       end return;
    end Constructor;
 
-
 begin
-   Register_Name (Name => LIFX.Messages.Constants.Device_Messages.StateGroup , Object_Tag => StateGroup_Message'Tag );
+   Register_Name (Name => LIFX.Messages.Constants.Device_Messages.StateGroup, Object_Tag => StateGroup_Message'Tag);
 end LIFX.Messages.StateGroup_Messages;

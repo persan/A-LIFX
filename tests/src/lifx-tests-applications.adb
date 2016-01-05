@@ -1,8 +1,5 @@
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Tags;
-with GNAT.Source_Info;
 with LIFX.Messages.Lights.Get_Messages;
-with Stream_Tools.Memory_Streams.Send_Socket;
 with LIFX.Messages.GetGroup_Messages;
 with GNAT.Time_Stamp;
 with LIFX.Messages.GetLocation_Messages;
@@ -12,9 +9,8 @@ with LIFX.Messages.Lights.SetPower_Messages;
 with LIFX.Messages.GetWifiFirmware_Messages;
 with LIFX.Messages.GetWifiInfo_Messages;
 
-package body Lifx.Tests.Applications is
+package body LIFX.Tests.Applications is
    use GNAT.Sockets;
-   use Stream_Tools.Memory_Streams;
    use LIFX.Messages;
    ----------------
    -- Initialize --
@@ -34,8 +30,6 @@ package body Lifx.Tests.Applications is
       Self.S.Set_Length (Self.Buffer'Length);
    end Initialize;
 
-
-
    procedure Log
      (Handler  : in out Test_App;
       Message  : LIFX.Messages.Message'Class;
@@ -47,7 +41,6 @@ package body Lifx.Tests.Applications is
 
    end;
 
-
    procedure Send (Handler  : in out Test_App;
                    Message  : LIFX.Messages.Message'Class) is
    begin
@@ -58,28 +51,28 @@ package body Lifx.Tests.Applications is
    -- On_State --
    --------------
 
-   procedure On_State
+   overriding procedure On_State
      (Handler : in out Test_App;
       Message : LIFX.Messages.Lights.State_Messages.State_Message)
    is
    begin
       Handler.Log (Message);
       if LIFX.Messages.Image (Message.Label) = "Moa:s Rum" then
-         put_line("---->");
+         Put_Line ("---->");
          delay 0.2;
          Handler.Send (LIFX.Messages.Lights.SetPower_Messages.Create
                        (Level => (if Message.Power > 40000 then 000.0 else 1.0), Set_Time =>  15.0));
          delay 0.2;
 
       end if;
-      Handler.Send (Messages.GetGroup_Messages.Create);
+      Handler.Send (Messages.GetGroup_Messages.create);
    end On_State;
 
    ---------------------
    -- On_StateService --
    ---------------------
 
-   procedure On_StateService
+   overriding procedure On_StateService
      (Handler : in out Test_App;
       Message : LIFX.Messages.StateService_Messages.StateService_Message)
    is
@@ -88,46 +81,44 @@ package body Lifx.Tests.Applications is
       Handler.Send (Messages.Lights.Get_Messages.Create);
    end On_StateService;
 
-   procedure On_StatePower
+   overriding procedure On_StatePower
      (Handler : in out Test_App;
       Message : LIFX.Messages.StatePower_Messages.StatePower_Message) is
    begin
       Handler.Log (Message);
-      Handler.Send (Messages.GetWifiFirmware_Messages.Create);
+      Handler.Send (Messages.GetWifiFirmware_Messages.create);
    end;
 
-
-   procedure On_StateGroup
+   overriding procedure On_StateGroup
      (Handler : in out Test_App;
-      message : LIFX.Messages.StateGroup_Messages.StateGroup_Message) is
+      Message : LIFX.Messages.StateGroup_Messages.StateGroup_Message) is
    begin
       Handler.Log (Message);
       Handler.Send (Messages.GetLocation_Messages.Create);
    end On_StateGroup;
 
-
-   procedure On_StateLocation
+   overriding procedure On_StateLocation
      (Handler : in out Test_App;
-      message : LIFX.Messages.StateLocation_Messages.StateLocation_Message) is
+      Message : LIFX.Messages.StateLocation_Messages.StateLocation_Message) is
    begin
       Handler.Log (Message);
-      Handler.Send (Messages.GetHostFirmware_Messages.Create);
+      Handler.Send (Messages.GetHostFirmware_Messages.create);
    end On_StateLocation;
 
-   procedure On_StateHostFirmware
+   overriding procedure On_StateHostFirmware
      (Handler : in out Test_App;
       message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message) is
    begin
-      Handler.Log (Message);
-      Handler.Send (Messages.GetWifiFirmware_Messages.Create);
+      Handler.Log (message);
+      Handler.Send (Messages.GetWifiFirmware_Messages.create);
    end On_StateHostFirmware;
 
-   procedure On_StateWifiFirmware
+   overriding procedure On_StateWifiFirmware
      (Handler : in out Test_App;
-      Message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message) is
+      message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message) is
    begin
-      Handler.Log (Message);
-      Handler.Send (Messages.GetWifiInfo_Messages.Create);
+      Handler.Log (message);
+      Handler.Send (Messages.GetWifiInfo_Messages.create);
    end;
 
    overriding procedure On_StateWifiInfo
@@ -137,5 +128,4 @@ package body Lifx.Tests.Applications is
       Handler.Log (Message);
    end;
 
-
-end Lifx.Tests.Applications;
+end LIFX.Tests.Applications;

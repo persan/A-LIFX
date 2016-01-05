@@ -1,10 +1,8 @@
 package body LIFX.Messages.Dispatchers is
 
-   use all Type Ada.Tags.Tag;
+   use all type Ada.Tags.Tag;
 
-   procedure Dispatch_Message
-      (Handler : in out Message_Handler'Class;
-       Message : LIFX.Messages.Message'Class) is
+   procedure Dispatch_Message (Handler : in out Message_Handler'Class; Message : LIFX.Messages.Message'Class) is
    begin
       if Message'Tag = LIFX.Messages.Acknowledgement_Messages.Acknowledgement_Message'Tag then
          Handler.On_Acknowledgement (LIFX.Messages.Acknowledgement_Messages.Acknowledgement_Message (Message));
