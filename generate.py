@@ -28,8 +28,10 @@ def ada2file(s):
 
 def printSpec(Unitname, names):
     with file(join(dirname(__file__), "src", ada2file(Unitname))+".ads", "w") as outf:
+        with file("LICENSE") as inf:
+			outf.write(inf.read())
         outf.write("--  ---------------------------------------------------------------\n")
-        outf.write("--  This paclage is automaticly generated do not edit by hand\n")
+        outf.write("--  This package is automaticly generated do not edit by hand\n")
         outf.write("--  ---------------------------------------------------------------\n\n")
 
         for name in names:
@@ -49,6 +51,8 @@ def printSpec(Unitname, names):
 
 def printBody(Unitname, names):
     with file(join(dirname(__file__), "src", ada2file(Unitname))+".adb", "w") as outf:
+        with file("LICENSE") as inf:
+			outf.write(inf.read())
         outf.write("--  ---------------------------------------------------------------\n")
         outf.write("--  This paclage is automaticly generated do not edit by hand\n")
         outf.write("--  ---------------------------------------------------------------\n\n")
