@@ -2,3 +2,5 @@
 *.cgpr
 messages.txt
 .obj
+gpsbrowser.*
+
