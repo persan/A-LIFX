@@ -6,8 +6,10 @@ with LIFX.Messages;
 
 package LIFX.Bulbs is
    type Bulb is tagged record
-      Name    : Ada.Strings.Unbounded.Unbounded_String;
-      Address : GNAT.Sockets.Inet_Addr_Type;
+      Label    : Ada.Strings.Unbounded.Unbounded_String;
+      Location : Ada.Strings.Unbounded.Unbounded_String;
+      Color    : LIFX.Messages.HSBK_Type;
+      Address  : GNAT.Sockets.Inet_Addr_Type;
    end record;
 
    package Bulb_Vectors is new Ada.Containers.Vectors (Natural, Bulb);

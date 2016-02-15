@@ -20,10 +20,10 @@ package body LIFX.Messages.Acknowledgement_Messages is
       end return;
    end Constructor;
 
-   function Create return Acknowledgement_Message is
+   function Create (Src : Message'Class) return Acknowledgement_Message is
    begin
       return Ret : Acknowledgement_Message do
-         Ret.Header.Frame_Address.Sequence := Sequence;
+         Ret.Header.Frame_Address.Sequence := Src.Header.Frame_Address.Sequence;
       end return;
    end Create;
 

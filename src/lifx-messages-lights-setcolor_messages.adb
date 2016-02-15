@@ -22,7 +22,7 @@ package body LIFX.Messages.Lights.SetColor_Messages is
    begin
       return Ret : SetColor_Message do
          Ret.Color                             := Color;
-         Ret.Duration                          := Uint32 (Duration * 1000.0);
+         Ret.Duration                          := Interfaces.Unsigned_32 (Duration * 1000.0);
          Ret.Header.Frame_Address.Res_Required := True;
          Ret.Header.Frame_Address.Ack_Required := False;
          Ret.Header.Frame_Address.Sequence     := Sequence;

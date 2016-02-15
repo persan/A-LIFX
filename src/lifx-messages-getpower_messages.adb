@@ -7,7 +7,7 @@ package body LIFX.Messages.GetPower_Messages is
    overriding procedure Initialize (Msg : in out GetPower_Message) is
    begin
       Msg.Header.Protocol_Header.Msg_Type := LIFX.Messages.Constants.Light_Messages.GetPower;
-      Msg.Header.Frame.Size               := Msg.Header'Size / 8;
+      Msg.Header.Frame.Size               := GetPower_Message'Size / Ada.Streams.Stream_Element'Size;
    end Initialize;
 
    overriding function Constructor (Params : not null access Ada.Streams.Root_Stream_Type'Class) return GetPower_Message is

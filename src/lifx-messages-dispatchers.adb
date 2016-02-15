@@ -2,7 +2,9 @@ package body LIFX.Messages.Dispatchers is
 
    use all type Ada.Tags.Tag;
 
-   procedure Dispatch_Message (Handler : in out Message_Handler'Class; Message : LIFX.Messages.Message'Class) is
+   procedure Dispatch_Message
+      (Handler : in out Message_Handler'Class;
+       Message : LIFX.Messages.Message'Class) is
    begin
       if Message'Tag = LIFX.Messages.Acknowledgement_Messages.Acknowledgement_Message'Tag then
          Handler.On_Acknowledgement (LIFX.Messages.Acknowledgement_Messages.Acknowledgement_Message (Message));
@@ -70,6 +72,8 @@ package body LIFX.Messages.Dispatchers is
          Handler.On_StateWifiFirmware (LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message (Message));
       elsif Message'Tag = LIFX.Messages.StateWifiInfo_Messages.StateWifiInfo_Message'Tag then
          Handler.On_StateWifiInfo (LIFX.Messages.StateWifiInfo_Messages.StateWifiInfo_Message (Message));
+      elsif Message'Tag = LIFX.Messages.Unknown_Messages.Unknown_Message'Tag then
+         Handler.On_Unknown (LIFX.Messages.Unknown_Messages.Unknown_Message (Message));
       else
          null;
       end if;

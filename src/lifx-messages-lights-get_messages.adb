@@ -4,13 +4,17 @@ package body LIFX.Messages.Lights.Get_Messages is
    -----------------
    -- Constructor --
    -----------------
-   overriding procedure Initialize (Msg : in out Get_Message) is
+   overriding
+   procedure Initialize (Msg : in out Get_Message) is
    begin
       Msg.Header.Protocol_Header.Msg_Type := LIFX.Messages.Constants.Light_Messages.Get;
       Msg.Header.Frame.Size               := Msg.Header'Size / 8;
    end Initialize;
 
-   overriding function Constructor (Params : not null access Ada.Streams.Root_Stream_Type'Class) return Get_Message is
+   overriding
+   function Constructor
+     (Params : not null access Ada.Streams.Root_Stream_Type'Class)
+      return Get_Message is
       pragma Unreferenced (Params);
    begin
       pragma Warnings (Off);

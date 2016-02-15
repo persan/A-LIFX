@@ -14,35 +14,28 @@ package body LIFX.Messages.Lights.State_Messages is
    overriding function Constructor (Params : not null access Ada.Streams.Root_Stream_Type'Class) return State_Message is
    begin
       return Ret : State_Message do
-         HSBK_Type'Read (Params, Ret.color);
-         Uint16'Read (Params, Ret.Reserved_1);
-         Uint16'Read (Params, Ret.Power);
+         HSBK_Type'Read (Params, Ret.Color);
+         Interfaces.Unsigned_16'Read (Params, Ret.Reserved_1);
+         Interfaces.Unsigned_16'Read (Params, Ret.Power);
          String'Read (Params, Ret.Label);
-         Uint64'Read (Params, Ret.Reserved_2);
+         Interfaces.Unsigned_64'Read (Params, Ret.Reserved_2);
       end return;
    end Constructor;
 
    overriding function Image (Item : State_Message) return String is
    begin
-      return Image (Message (Item)) &
-        ASCII.LF &
-        "Color    => (" &
-        Image (Item.color) &
-        ")," &
-        ASCII.LF &
-        "Power    => " &
-        Image (Item.Power) &
-        "," &
-        ASCII.LF &
-        "Label => " &
-        Image (Item.Label);
+      return Image (Message (Item)) & ASCII.LF &
+        "Color => (" & Image (Item.Color) & ")," & ASCII.LF &
+        "Power => " & Image (Item.Power) & "," &  ASCII.LF &
+        "Label => " & Image (Item.Label);
    end Image;
 
-   function Create (color : HSBK_Type; Power : Float; Label : String) return State_Message is
+   function Create (Src : Message'Class; Color : HSBK_Type; Power : Float; Label : String) return State_Message is
    begin
       return Ret : State_Message do
-         Ret.color := color;
-         Ret.Power := Uint16 (Float (Uint16'Last) * Power);
+         Ret.Header.Frame_Address.Sequence := Src.Header.Frame_Address.Sequence;
+         Ret.Color := Color;
+         Ret.Power := Interfaces.Unsigned_16 (Float (Interfaces.Unsigned_16'Last) * Power);
          Ada.Strings.Fixed.Move (Label, Ret.Label);
          Ret.Header.Frame_Address.Res_Required := True;
          Ret.Header.Frame_Address.Ack_Required := False;

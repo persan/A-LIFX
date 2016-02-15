@@ -28,6 +28,10 @@ def ada2file(s):
 
 def printSpec(Unitname, names):
     with file(join(dirname(__file__), "src", ada2file(Unitname))+".ads", "w") as outf:
+        outf.write("--  ---------------------------------------------------------------\n")
+        outf.write("--  This paclage is automaticly generated do not edit by hand\n")
+        outf.write("--  ---------------------------------------------------------------\n\n")
+
         for name in names:
             outf.write("with %(pkg)s;\n" % name)
         outf.write("package %(name)s is\n" % {"name": Unitname})
@@ -39,27 +43,30 @@ def printSpec(Unitname, names):
                        " is null;\n\n" % name)
         outf.write("   procedure Dispatch_Message\n"
                    "      (Handler : in out Message_Handler'Class;\n"
-                   "       Message : LIFX.Messages.Message'Class);\n")
+                   "       Message : LIFX.Messages.Message'Class);\n\n")
         outf.write("end %(name)s;\n" % {"name": Unitname})
 
 
 def printBody(Unitname, names):
     with file(join(dirname(__file__), "src", ada2file(Unitname))+".adb", "w") as outf:
+        outf.write("--  ---------------------------------------------------------------\n")
+        outf.write("--  This paclage is automaticly generated do not edit by hand\n")
+        outf.write("--  ---------------------------------------------------------------\n\n")
         outf.write("package body %(name)s is\n\n" % {"name": Unitname})
-        outf.write("   use all Type Ada.Tags.Tag;\n\n")
+        outf.write("   use all type Ada.Tags.Tag;\n\n")
         outf.write("   procedure Dispatch_Message\n"
                    "      (Handler : in out Message_Handler'Class;\n"
                    "       Message : LIFX.Messages.Message'Class) is\n")
         outf.write("   begin\n")
         outf.write("      if Message'Tag = %(pkg)s.%(name)s_Message'Tag then\n"  % names[0])
-        outf.write("         Handler.On_%(name)s (%(pkg)s.%(name)s_Message (Message));\n"  % names[0])
+        outf.write("         Handler.On_%(name)s (%(pkg)s.%(name)s_Message (Message));\n" % names[0])
         for name in names[1:]:
-            outf.write("      elsif Message'Tag = %(pkg)s.%(name)s_Message'Tag then\n"  % name)
-            outf.write("         Handler.On_%(name)s (%(pkg)s.%(name)s_Message (Message));\n"  % name)
+            outf.write("      elsif Message'Tag = %(pkg)s.%(name)s_Message'Tag then\n" % name)
+            outf.write("         Handler.On_%(name)s (%(pkg)s.%(name)s_Message (Message));\n" % name)
 
         outf.write("      else\n")
         outf.write("         null;\n")
-        outf.write("      end if;\n")
+        outf.write("      end if;\n\n")
         outf.write("   end Dispatch_Message;\n")
 
         outf.write("end %(name)s;\n" % {"name": Unitname})
@@ -67,7 +74,7 @@ def printBody(Unitname, names):
 
 names = getNames()
 names.sort()
-l=[]
+l = []
 for i in names:
     l.append(i["pkg"])
 l.sort()

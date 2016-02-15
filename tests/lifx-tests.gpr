@@ -7,17 +7,21 @@ project LIFX.Tests is
 
    for Languages use ("Ada", "Makefile");
    for Object_Dir use ".obj";
-   for Main use ("lifx-tests-main.adb");
    for Exec_Dir use "bin";
    for Source_Dirs use (".", "src/**");
+   for Main use ("lifx-bulb_emulators-main.adb",
+                 "lifx-tests-applications-main.adb");
 
-   package Compiler renames LIFX.Compiler;
+   package Compiler renames Lifx.Compiler;
 
    package Binder is
       for Default_Switches ("ada") use ("-E");
    end Binder;
 
-   package Make renames  LIFX.Make;
-   package Naming renames  LIFX.NAming;
+   package Make renames Lifx.Make;
+
+   package Naming renames Lifx.Naming;
+
+
 
 end LIFX.Tests;

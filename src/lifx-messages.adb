@@ -3,13 +3,13 @@ with GNAT.Calendar.Time_IO;
 with GNAT.Calendar;
 with Stream_Tools.Memory_Streams;
 with Ada.Strings.Unbounded;
-
+with LIFX.Messages.Unknown_Messages;
 package body LIFX.Messages is
 
    use all type Ada.Streams.Stream_Element_Offset;
    use all type Ada.Tags.Tag;
    use all type Ada.Calendar.Time;
-
+   use all type Interfaces.Unsigned_8;
    -----------
    -- Input --
    -----------
@@ -24,7 +24,9 @@ package body LIFX.Messages is
    begin
       Header_Type'Read (S, Name);
       if Name_To_Tag (Name.Protocol_Header.Msg_Type) = Ada.Tags.No_Tag then
-         raise Constraint_Error with "Unknown message => " & Name.Protocol_Header.Msg_Type'Img;
+         return Ret : Message'Class := Dispatching_Constructor (Unknown_Messages.Unknown_Message'Tag, S) do
+            Ret.Header := Name;
+         end return;
       end if;
       return Ret : Message'Class := Dispatching_Constructor (Name_To_Tag (Name.Protocol_Header.Msg_Type), S) do
          Ret.Header := Name;
@@ -45,7 +47,7 @@ package body LIFX.Messages is
       Dynamic_Memory_Stream'Write (S, Buffer);
    end Output;
 
-   function Image (Item : Uint16_Array) return String is
+   function Image (Item : Unsigned_16_Array) return String is
       Ret : Ada.Strings.Unbounded.Unbounded_String;
    begin
       for I of Item loop
@@ -58,7 +60,7 @@ package body LIFX.Messages is
    -- Register_Name --
    -------------------
 
-   procedure Register_Name (Name : Uint16; Object_Tag : Ada.Tags.Tag) is
+   procedure Register_Name (Name : Msg_Kind; Object_Tag : Ada.Tags.Tag) is
    begin
       if Name_To_Tag (Name) /= Ada.Tags.No_Tag then
          raise Constraint_Error with "id" & Name'Img & " defined twice";
@@ -70,48 +72,48 @@ package body LIFX.Messages is
 
    procedure Write (S : not null access Ada.Streams.Root_Stream_Type'Class; Data : Frame_Type) is
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Frame_Type'Size / Ada.Streams.Stream_Element'Size) with
-         Import  => True,
-         Address => Data'Address;
+        Import  => True,
+        Address => Data'Address;
    begin
       Ada.Streams.Stream_Element_Array'Write (S, Buffer);
    end Write;
 
    procedure Read (S : not null access Ada.Streams.Root_Stream_Type'Class; Data : out Frame_Type) is
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Frame_Type'Size / Ada.Streams.Stream_Element'Size) with
-         Import  => True,
-         Address => Data'Address;
+        Import  => True,
+        Address => Data'Address;
    begin
       Ada.Streams.Stream_Element_Array'Read (S, Buffer);
    end Read;
 
    procedure Write (S : not null access Ada.Streams.Root_Stream_Type'Class; Data : Frame_Address_Type) is
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Frame_Address_Type'Size / Ada.Streams.Stream_Element'Size) with
-         Import  => True,
-         Address => Data'Address;
+        Import  => True,
+        Address => Data'Address;
    begin
       Ada.Streams.Stream_Element_Array'Write (S, Buffer);
    end Write;
 
    procedure Read (S : not null access Ada.Streams.Root_Stream_Type'Class; Data : out Frame_Address_Type) is
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Frame_Address_Type'Size / Ada.Streams.Stream_Element'Size) with
-         Import  => True,
-         Address => Data'Address;
+        Import  => True,
+        Address => Data'Address;
    begin
       Ada.Streams.Stream_Element_Array'Read (S, Buffer);
    end Read;
 
    procedure Write (S : not null access Ada.Streams.Root_Stream_Type'Class; Data : Protocol_Header_Type) is
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Protocol_Header_Type'Size / Ada.Streams.Stream_Element'Size) with
-         Import  => True,
-         Address => Data'Address;
+        Import  => True,
+        Address => Data'Address;
    begin
       Ada.Streams.Stream_Element_Array'Write (S, Buffer);
    end Write;
 
    procedure Read (S : not null access Ada.Streams.Root_Stream_Type'Class; Data : out Protocol_Header_Type) is
       Buffer : Ada.Streams.Stream_Element_Array (1 .. Protocol_Header_Type'Size / Ada.Streams.Stream_Element'Size) with
-         Import  => True,
-         Address => Data'Address;
+        Import  => True,
+        Address => Data'Address;
    begin
       Ada.Streams.Stream_Element_Array'Read (S, Buffer);
    end Read;
@@ -158,14 +160,14 @@ package body LIFX.Messages is
    function Image (Item : Protocol_Header_Type) return String is
    begin
       return
-      "    Msg_Type => " & Item.Msg_Type'Img & ", " & ASCII.LF & "";
+        "    Msg_Type => " & Image (Item.Msg_Type);
    end Image;
 
-   function Image (Item : Header_Type; With_Header : Boolean := False) return String is
+   function Image (Item : Header_Type; With_Header : Boolean := True) return String is
    begin
       return
         (if  With_Header then
-            "  Frame           => (" & ASCII.LF & Image (Item.Frame) & ")," & ASCII.LF &
+           ASCII.LF &  "  Frame           => (" & ASCII.LF & Image (Item.Frame) & ")," & ASCII.LF &
            "  Frame_Address   => (" & ASCII.LF & Image (Item.Frame_Address) & ")," & ASCII.LF &
            "  Protocol_Header => (" & ASCII.LF & Image (Item.Protocol_Header) & ")"
          else "");
@@ -218,10 +220,24 @@ package body LIFX.Messages is
    begin
       return GNAT.Calendar.Time_IO.Image (To_Calendar_Time (Item), "%Y-%m-%d %T");
    end Image;
+   function Image (Item : Msg_Kind) return String is
+      T : constant String := Ada.Tags.External_Tag (Name_To_Tag (Item));
 
-   Sequence_Store : Byte := 0;
+   begin
+      for I in reverse T'Range loop
+         if T (I) = '.' then
+            for L in I + 1 .. T'Last loop
+               if T (L) not in 'A' .. 'Z' | '0' .. '9' then
+                  return T (I + 1 .. L - 1);
+               end if;
+            end loop;
+         end if;
+      end loop;
+      return T;
+   end;
+   Sequence_Store : Interfaces.Unsigned_8 := 0;
 
-   function Sequence return Byte is
+   function Sequence return Interfaces.Unsigned_8 is
    begin
       Sequence_Store := Sequence_Store + 1;
       return Sequence_Store;

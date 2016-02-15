@@ -18,10 +18,16 @@ package body LIFX.Messages.SetPower_Messages is
       end return;
    end Constructor;
 
+   overriding function Image (Item : SetPower_Message) return String is
+   begin
+      return Image (Message (Item)) & ASCII.LF &
+        "Level   => " & Image (Item.Level);
+   end Image;
+
    function Create (Level : Float) return SetPower_Message is
    begin
       return Ret : SetPower_Message do
-         Ret.Level := Uint16 (Float (Uint16'Last) * Level);
+         Ret.Level := Interfaces.Unsigned_16 (Float (Interfaces.Unsigned_16'Last) * Level);
       end return;
    end Create;
 

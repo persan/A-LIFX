@@ -5,11 +5,6 @@ package body LIFX.Messages.SetLabel_Messages is
    -----------------
    -- Constructor --
    -----------------
-   overriding procedure Initialize (Msg : in out SetLabel_Message) is
-   begin
-      Msg.Header.Protocol_Header.Msg_Type := LIFX.Messages.Constants.Device_Messages.SetLabel;
-      Msg.Header.Frame.Size               := Msg.Header'Size / 8 + 32;
-   end Initialize;
 
    overriding function Constructor (Params : not null access Ada.Streams.Root_Stream_Type'Class) return SetLabel_Message is
       pragma Unreferenced (Params);
@@ -18,6 +13,18 @@ package body LIFX.Messages.SetLabel_Messages is
          pragma Warnings (Off, Ret);
       end return;
    end Constructor;
+
+   overriding procedure Initialize (Msg : in out SetLabel_Message) is
+   begin
+      Msg.Header.Protocol_Header.Msg_Type := LIFX.Messages.Constants.Device_Messages.SetLabel;
+      Msg.Header.Frame.Size               := SetLabel_Message'Size / Ada.Streams.Stream_Element'Size;
+   end Initialize;
+
+   overriding function Image (Item : SetLabel_Message) return String is
+   begin
+      return Image (Message (Item)) & ASCII.LF &
+        "Label    => " & Image (Item.Label);
+   end Image;
 
    function Create (Label : String) return SetLabel_Message is
    begin
