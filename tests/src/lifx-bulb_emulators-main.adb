@@ -31,7 +31,6 @@
 --                                                                          --
 --                                                                          --
 ------------------------------------------------------------------------------
-
 procedure LIFX.Bulb_Emulators.Main is
    App : Bulb_Emulator;
 

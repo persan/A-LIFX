@@ -32,10 +32,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Stream_Tools.Memory_Streams.Send_Socket;
 with GNAT.Source_Info;
 with Ada.Text_IO; use Ada.Text_IO;
 with GNAT.Time_Stamp;
+with Stream_Tools.Memory_Streams;
 procedure LIFX.Messages.Send_Socket
   (Socket : Socket_Type;
    Item   : LIFX.Messages.Message'Class;

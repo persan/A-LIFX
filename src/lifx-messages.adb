@@ -97,7 +97,9 @@ package body LIFX.Messages is
    procedure Register_Name (Name : Msg_Kind; Object_Tag : Ada.Tags.Tag) is
    begin
       if Name_To_Tag (Name) /= Ada.Tags.No_Tag then
-         raise Constraint_Error with "id" & Name'Img & " defined twice";
+         raise Constraint_Error with "id" & Name'Img & " defined twice: " &
+           Ada.Tags.External_Tag (Object_Tag) & " & " &
+           Ada.Tags.External_Tag (Name_To_Tag (Name));
       else
          Name_To_Tag (Name) := Object_Tag;
       end if;
