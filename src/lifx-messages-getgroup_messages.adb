@@ -53,12 +53,12 @@ package body LIFX.Messages.GetGroup_Messages is
       end return;
    end Constructor;
 
-   function create return GetGroup_Message is
+   function Create return GetGroup_Message is
    begin
       return Ret : GetGroup_Message do
          Ret.Header.Frame_Address.Sequence := Sequence;
       end return;
-   end create;
+   end Create;
 
 begin
    Register_Name (Name => LIFX.Messages.Constants.Device_Messages.GetGroup, Object_Tag => GetGroup_Message'Tag);

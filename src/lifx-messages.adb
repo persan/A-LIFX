@@ -38,6 +38,7 @@ with GNAT.Calendar;
 with Stream_Tools.Memory_Streams;
 with Ada.Strings.Unbounded;
 with LIFX.Messages.Unknown_Messages;
+with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 package body LIFX.Messages is
 
    use all type Ada.Streams.Stream_Element_Offset;
@@ -163,11 +164,11 @@ package body LIFX.Messages is
       end return;
    end Image;
 
-   function Image (Item : String) return String is
+   function Image (Item : String; Width : Natural := 0) return String is
    begin
       for I in Item'Range loop
          if Item (I) < ' ' or else Item (I) > ASCII.DEL then
-            return Item (Item'First .. I - 1);
+            return Item (Item'First .. I - 1) & (if Width = 0 then "" else Natural'Max (0, Width - I)  * ' ');
          end if;
       end loop;
       return Item;
@@ -199,7 +200,7 @@ package body LIFX.Messages is
         "    Msg_Type => " & Image (Item.Msg_Type);
    end Image;
 
-   function Image (Item : Header_Type; With_Header : Boolean := True) return String is
+   function Image (Item : Header_Type; With_Header : Boolean := False) return String is
    begin
       return
         (if  With_Header then

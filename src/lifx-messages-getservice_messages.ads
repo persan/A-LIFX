@@ -44,6 +44,6 @@ package LIFX.Messages.GetService_Messages is
    overriding
    procedure Initialize (Msg : in out GetService_Message);
 
-   function create return GetService_Message;
+   function Create return GetService_Message;
 
 end LIFX.Messages.GetService_Messages;

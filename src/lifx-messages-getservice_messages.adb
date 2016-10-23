@@ -53,7 +53,7 @@ package body LIFX.Messages.GetService_Messages is
       end return;
    end Constructor;
 
-   function create return GetService_Message is
+   function Create return GetService_Message is
    begin
       return Ret : GetService_Message do
          Ret.Header.Frame.Is_Tagged            := True;
@@ -61,7 +61,7 @@ package body LIFX.Messages.GetService_Messages is
          Ret.Header.Frame_Address.Ack_Required := False;
          Ret.Header.Frame_Address.Sequence     := Sequence;
       end return;
-   end create;
+   end Create;
 
 begin
    Register_Name (Name => LIFX.Messages.Constants.Device_Messages.GetService, Object_Tag => GetService_Message'Tag);

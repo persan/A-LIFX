@@ -35,7 +35,7 @@
 package LIFX.Messages.StateGroup_Messages is
    type StateGroup_Message is new Message with record
       Group      : String (1 .. 16);
-      Label      : String (1 .. 32);
+      Location   : String (1 .. 32);
       Updated_At : Time_Type;
    end record;
 
@@ -54,7 +54,7 @@ package LIFX.Messages.StateGroup_Messages is
    function Create
      (Src        : Message'Class;
       Group      : String;
-      Label      : String;
+      Location   : String;
       Updated_At : Time_Type) return StateGroup_Message;
 
 end LIFX.Messages.StateGroup_Messages;

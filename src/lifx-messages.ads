@@ -181,12 +181,12 @@ package LIFX.Messages is
    function Image (Item : Boolean) return String is (Item'Img);
    function Image (Item : Boolean_Array) return String;
    function Image (Item : Interfaces.Unsigned_8) return String is (Item'Img);
-   function Image (Item : Header_Type; With_Header : Boolean := True) return String;
+   function Image (Item : Header_Type; With_Header : Boolean := False) return String;
    function Image (Item : HSBK_Type) return String;
    function Image (Item : Hue_Type) return String is (Item'Img);
    function Image (Item : Origin_Type) return String is (Item'Img);
    function Image (Item : Protocoll_Type) return String is (Item'Img);
-   function Image (Item : String) return String;
+   function Image (Item : String; Width : Natural := 0) return String;
    function Image (Item : Time_Type) return String;
    function Image (Item : Interfaces.Unsigned_16) return String is (Item'Img);
    function Image (Item : Unsigned_16_Array) return String;

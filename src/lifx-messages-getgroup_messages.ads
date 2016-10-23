@@ -44,6 +44,6 @@ package LIFX.Messages.GetGroup_Messages is
    overriding
    procedure Initialize (Msg : in out GetGroup_Message);
 
-   function create return GetGroup_Message;
+   function Create return GetGroup_Message;
 
 end LIFX.Messages.GetGroup_Messages;

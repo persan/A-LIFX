@@ -43,7 +43,7 @@ package body LIFX.Messages.StateGroup_Messages is
    begin
       return Image (Message (Item)) &  ASCII.LF &
         "group      => " & Image (Item.Group) & "," & ASCII.LF &
-        "Label      => " & Image (Item.Label) & "," & ASCII.LF &
+        "Location   => " & Image (Item.Location) & "," & ASCII.LF &
         "updated_at => " & Image (Item.Updated_At);
    end Image;
 
@@ -51,7 +51,7 @@ package body LIFX.Messages.StateGroup_Messages is
    begin
       return Ret : StateGroup_Message do
          String'Read (Params, Ret.Group);
-         String'Read (Params, Ret.Label);
+         String'Read (Params, Ret.Location);
          Time_Type'Read (Params, Ret.Updated_At);
       end return;
    end Constructor;
@@ -65,13 +65,13 @@ package body LIFX.Messages.StateGroup_Messages is
    function Create
      (Src        : Message'Class;
       Group      : String;
-      Label      : String;
+      Location   : String;
       Updated_At : Time_Type) return StateGroup_Message is
    begin
       return Ret : StateGroup_Message do
          Ret.Header.Frame_Address.Sequence :=  Src.Header.Frame_Address.Sequence;
          Ret.Group := Group;
-         Ret.Label := Label;
+         Ret.Location := Location;
          Ret.Updated_At := Updated_At;
       end return;
    end Create;
