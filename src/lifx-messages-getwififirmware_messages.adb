@@ -53,12 +53,12 @@ package body LIFX.Messages.GetWifiFirmware_Messages is
       end return;
    end Constructor;
 
-   function create return GetWifiFirmware_Message is
+   function Create return GetWifiFirmware_Message is
    begin
       return Ret : GetWifiFirmware_Message do
          Ret.Header.Frame_Address.Sequence := Sequence;
       end return;
-   end create;
+   end Create;
 
 begin
    Register_Name (Name => LIFX.Messages.Constants.Device_Messages.GetWifiFirmware, Object_Tag => GetWifiFirmware_Message'Tag);

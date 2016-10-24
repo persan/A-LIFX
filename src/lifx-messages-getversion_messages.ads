@@ -43,6 +43,6 @@ package LIFX.Messages.GetVersion_Messages is
    overriding
    procedure Initialize (Msg : in out GetVersion_Message);
 
-   function create return GetVersion_Message;
+   function Create return GetVersion_Message;
 
 end LIFX.Messages.GetVersion_Messages;

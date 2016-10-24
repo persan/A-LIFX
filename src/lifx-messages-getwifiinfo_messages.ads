@@ -44,6 +44,6 @@ package LIFX.Messages.GetWifiInfo_Messages is
    overriding
    procedure Initialize (Msg : in out GetWifiInfo_Message);
 
-   function create return GetWifiInfo_Message;
+   function Create return GetWifiInfo_Message;
 
 end LIFX.Messages.GetWifiInfo_Messages;

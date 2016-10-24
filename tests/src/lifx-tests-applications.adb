@@ -32,17 +32,21 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
-with LIFX.Messages.Lights.Get_Messages;
+with Ada.Calendar;
+with Ada.Strings.Fixed;
+with Ada.Strings;
+
+with Interfaces;
+
+with LIFX.Bulb_Store;
 with LIFX.Messages.GetGroup_Messages;
-with GNAT.Time_Stamp;
-with LIFX.Messages.GetLocation_Messages;
 with LIFX.Messages.GetHostFirmware_Messages;
-with LIFX.Messages.Send_Socket;
-with LIFX.Messages.Lights.SetPower_Messages;
+with LIFX.Messages.GetLocation_Messages;
 with LIFX.Messages.GetWifiFirmware_Messages;
 with LIFX.Messages.GetWifiInfo_Messages;
-with Interfaces;
+with LIFX.Messages.Lights.Get_Messages;
+with LIFX.Messages.Lights.SetPower_Messages;
+with LIFX.Messages.Send_Socket;
 
 package body LIFX.Tests.Applications is
    use Interfaces;
@@ -56,12 +60,12 @@ package body LIFX.Tests.Applications is
    begin
       Self.From := GNAT.Sockets.No_Sock_Addr;
       Self.Addr.Addr := Any_Inet_Addr;
---        Self.Addr.Port := LIFX_Port;
-      Self.Addr.Port := Any_Port;
+      Self.Addr.Port := LIFX_Port;
+      --        Self.Addr.Port := Any_Port;
       Create_Socket (Self.Server, Family_Inet, Socket_Datagram);
       Set_Socket_Option (Self.Server, Option => (Reuse_Address, Enabled => True));
       Set_Socket_Option (Self.Server, Option => (Broadcast, Enabled => True));
-      Set_Socket_Option (Self.Server, Option => (Receive_Timeout, Timeout => 10.0));
+      Set_Socket_Option (Self.Server, Option => (Receive_Timeout, Timeout => 2.0));
       Bind_Socket (Self.Server, Self.Addr);
       Self.S.Set_Address (Self.Buffer'Address);
       Self.S.Set_Length (Self.Buffer'Length);
@@ -71,10 +75,12 @@ package body LIFX.Tests.Applications is
      (Handler  : in out Test_App;
       Message  : LIFX.Messages.Message'Class;
       Location : String := GNAT.Source_Info.Enclosing_Entity) is
+      pragma Unreferenced (Message);
    begin
-      New_Line;
-      Put_Line (GNAT.Time_Stamp.Current_Time & " : " & Image (Handler.From) & ":" & Location);
-      Put_Line (Message.Image);
+      null;
+      --  New_Line;
+      --  Put_Line (GNAT.Time_Stamp.Current_Time & " : " & Image (Handler.From) & ":" & Location);
+      --  Put_Line (Message.Image);
    end;
 
    procedure Send (Handler  : in out Test_App;
@@ -83,6 +89,15 @@ package body LIFX.Tests.Applications is
       LIFX.Messages.Send_Socket (Handler.Server, Item => Message, To => Handler.From'Access);
    end;
 
+   procedure AppendNode (Node : GNAT.Sockets.Sock_Addr_Type) is
+   begin
+      if not Bulb_Store.Store.Contains (Node) then
+         Bulb_Store.Store.Insert
+           (Node,
+            New_Item =>
+              ((others => ' '), (others => ' '), (others => ' '),  (others => ' '),  (0.0, 0, 0, 2500), 0.0, Node, Ada.Calendar.Clock));
+      end if;
+   end;
    --------------
    -- On_State --
    --------------
@@ -92,16 +107,18 @@ package body LIFX.Tests.Applications is
       Message : LIFX.Messages.Lights.State_Messages.State_Message)
    is
    begin
+      AppendNode (Handler.From);
+      Bulb_Store.Store (Handler.From).Time := Ada.Calendar.Clock;
+      Ada.Strings.Fixed.Move (Message.Label, Bulb_Store.Store (Handler.From).Label);
       Handler.Log (Message);
       if LIFX.Messages.Image (Message.Label) = "Moa:s Rum" then
-         Put_Line ("---->");
          delay 0.2;
          Handler.Send (LIFX.Messages.Lights.SetPower_Messages.Create
                        (Level => (if Message.Power > 40000 then 000.0 else 1.0), Set_Time =>  15.0));
          delay 0.2;
 
       end if;
-      Handler.Send (Messages.GetGroup_Messages.create);
+      Handler.Send (Messages.GetGroup_Messages.Create);
    end On_State;
 
    ---------------------
@@ -113,6 +130,7 @@ package body LIFX.Tests.Applications is
       Message : LIFX.Messages.StateService_Messages.StateService_Message)
    is
    begin
+      AppendNode (Handler.From);
       Handler.Log (Message);
       Handler.Send (Messages.Lights.Get_Messages.Create);
    end On_StateService;
@@ -121,14 +139,18 @@ package body LIFX.Tests.Applications is
      (Handler : in out Test_App;
       Message : LIFX.Messages.StatePower_Messages.StatePower_Message) is
    begin
+      AppendNode (Handler.From);
       Handler.Log (Message);
-      Handler.Send (Messages.GetWifiFirmware_Messages.create);
+      Handler.Send (Messages.GetWifiFirmware_Messages.Create);
    end;
 
    overriding procedure On_StateGroup
      (Handler : in out Test_App;
       Message : LIFX.Messages.StateGroup_Messages.StateGroup_Message) is
    begin
+      AppendNode (Handler.From);
+      Ada.Strings.Fixed.Move (Message.Location, Bulb_Store.Store (Handler.From).Location);
+      Ada.Strings.Fixed.Move (Message.Group, Bulb_Store.Store (Handler.From).Group);
       Handler.Log (Message);
       Handler.Send (Messages.GetLocation_Messages.Create);
    end On_StateGroup;
@@ -137,24 +159,27 @@ package body LIFX.Tests.Applications is
      (Handler : in out Test_App;
       Message : LIFX.Messages.StateLocation_Messages.StateLocation_Message) is
    begin
+      AppendNode (Handler.From);
+      Ada.Strings.Fixed.Move (Message.Label, Bulb_Store.Store (Handler.From).Label2);
+      Ada.Strings.Fixed.Move (Message.Location, Bulb_Store.Store (Handler.From).Location);
       Handler.Log (Message);
       Handler.Send (Messages.GetHostFirmware_Messages.Create);
    end On_StateLocation;
 
    overriding procedure On_StateHostFirmware
      (Handler : in out Test_App;
-      message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message) is
+      Message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message) is
    begin
-      Handler.Log (message);
-      Handler.Send (Messages.GetWifiFirmware_Messages.create);
+      Handler.Log (Message);
+      Handler.Send (Messages.GetWifiFirmware_Messages.Create);
    end On_StateHostFirmware;
 
    overriding procedure On_StateWifiFirmware
      (Handler : in out Test_App;
-      message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message) is
+      Message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message) is
    begin
-      Handler.Log (message);
-      Handler.Send (Messages.GetWifiInfo_Messages.create);
+      Handler.Log (Message);
+      Handler.Send (Messages.GetWifiInfo_Messages.Create);
    end;
 
    overriding procedure On_StateWifiInfo

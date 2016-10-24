@@ -46,7 +46,7 @@ procedure LIFX.Messages.Send_Socket
    S      : aliased Stream_Tools.Memory_Streams.Memory_Stream;
 
    Last   : Ada.Streams.Stream_Element_Offset with
-      Unreferenced;
+     Unreferenced;
    procedure Log
      (Message  : LIFX.Messages.Message'Class;
       Location : String := GNAT.Source_Info.Enclosing_Entity) with GHOST => True;

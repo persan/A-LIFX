@@ -52,7 +52,7 @@ package LIFX.Messages.StateLabel_Messages is
    not overriding
    function Create
      (Src      : Message'Class;
-      Label : String)
+      Label    : String)
       return StateLabel_Message;
 
 end LIFX.Messages.StateLabel_Messages;

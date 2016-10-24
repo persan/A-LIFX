@@ -53,12 +53,12 @@ package body LIFX.Messages.GetVersion_Messages is
       end return;
    end Constructor;
 
-   function create return GetVersion_Message is
+   function Create return GetVersion_Message is
    begin
       return Ret : GetVersion_Message do
          Ret.Header.Frame_Address.Sequence := Sequence;
       end return;
-   end create;
+   end Create;
 
 begin
    Register_Name (Name => LIFX.Messages.Constants.Device_Messages.GetVersion, Object_Tag => GetVersion_Message'Tag);

@@ -53,8 +53,8 @@ package LIFX.Messages.StateService_Messages is
 
    function Create
      (Src      : Message'Class;
-      Service : Interfaces.Unsigned_8;
-      Port    : GNAT.Sockets.Port_Type)
+      Service  : Interfaces.Unsigned_8;
+      Port     : GNAT.Sockets.Port_Type)
       return StateService_Message;
 
 end LIFX.Messages.StateService_Messages;

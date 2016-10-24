@@ -36,7 +36,7 @@ package LIFX.Messages.StatePower_Messages is
    type StatePower_Message is new Message with record
       Level : Interfaces.Unsigned_16;
    end record with
-      Pack => True;
+     Pack => True;
 
    overriding
    function Constructor
@@ -52,7 +52,7 @@ package LIFX.Messages.StatePower_Messages is
 
    function Create
      (Src      : Message'Class;
-      Level : Interfaces.Unsigned_16)
+      Level    : Interfaces.Unsigned_16)
       return StatePower_Message;
 
 end LIFX.Messages.StatePower_Messages;

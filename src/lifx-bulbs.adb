@@ -51,7 +51,7 @@ package body LIFX.Bulbs is
    procedure Query_Network (Self : in out Bulbs_Record) is
    begin
       --  Generated stub: replace with real body!
---      pragma Compile_Time_Warning (Standard.True, "Query_Network unimplemented");
+      --      pragma Compile_Time_Warning (Standard.True, "Query_Network unimplemented");
       raise Program_Error with "Unimplemented procedure Query_Network";
    end Query_Network;
 
@@ -62,7 +62,7 @@ package body LIFX.Bulbs is
    function Image (Self : Bulbs_Record) return String is
    begin
       --  Generated stub: replace with real body!
---        pragma Compile_Time_Warning (Standard.True, "Image unimplemented");
+      --        pragma Compile_Time_Warning (Standard.True, "Image unimplemented");
       raise Program_Error with "Unimplemented function Image";
       return Image (Self);
    end Image;

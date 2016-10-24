@@ -32,20 +32,23 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
-with LIFX.Messages.Lights.Get_Messages;
-with LIFX.Messages.GetGroup_Messages;
+with Ada.Text_IO;
+
 with GNAT.Time_Stamp;
-with LIFX.Messages.GetLocation_Messages;
+
+with LIFX.Messages.GetGroup_Messages;
 with LIFX.Messages.GetHostFirmware_Messages;
-with LIFX.Messages.Send_Socket;
-with LIFX.Messages.Lights.SetPower_Messages;
+with LIFX.Messages.GetLocation_Messages;
 with LIFX.Messages.GetWifiFirmware_Messages;
 with LIFX.Messages.GetWifiInfo_Messages;
+with LIFX.Messages.Lights.Get_Messages;
+with LIFX.Messages.Lights.SetPower_Messages;
+with LIFX.Messages.Send_Socket;
 
 package body LIFX.Bulb_Emulators is
    use GNAT.Sockets;
    use LIFX.Messages;
+   use Ada.Text_IO;
    ----------------
    -- Initialize --
    ----------------
@@ -99,7 +102,7 @@ package body LIFX.Bulb_Emulators is
          delay 0.2;
 
       end if;
-      Handler.Send (Messages.GetGroup_Messages.create);
+      Handler.Send (Messages.GetGroup_Messages.Create);
    end On_State;
 
    overriding procedure On_GetService
@@ -130,7 +133,7 @@ package body LIFX.Bulb_Emulators is
       Message : LIFX.Messages.StatePower_Messages.StatePower_Message) is
    begin
       Handler.Log (Message);
-      Handler.Send (Messages.GetWifiFirmware_Messages.create);
+      Handler.Send (Messages.GetWifiFirmware_Messages.Create);
    end;
 
    overriding procedure On_StateGroup
@@ -146,23 +149,23 @@ package body LIFX.Bulb_Emulators is
       Message : LIFX.Messages.StateLocation_Messages.StateLocation_Message) is
    begin
       Handler.Log (Message);
-      Handler.Send (Messages.GetHostFirmware_Messages.create);
+      Handler.Send (Messages.GetHostFirmware_Messages.Create);
    end On_StateLocation;
 
    overriding procedure On_StateHostFirmware
      (Handler : in out Bulb_Emulator;
-      message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message) is
+      Message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message) is
    begin
-      Handler.Log (message);
-      Handler.Send (Messages.GetWifiFirmware_Messages.create);
+      Handler.Log (Message);
+      Handler.Send (Messages.GetWifiFirmware_Messages.Create);
    end On_StateHostFirmware;
 
    overriding procedure On_StateWifiFirmware
      (Handler : in out Bulb_Emulator;
       Message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message) is
    begin
-      Handler.Log (message);
-      Handler.Send (Messages.GetWifiInfo_Messages.create);
+      Handler.Log (Message);
+      Handler.Send (Messages.GetWifiInfo_Messages.Create);
    end;
 
    overriding procedure On_StateWifiInfo

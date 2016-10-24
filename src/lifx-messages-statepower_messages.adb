@@ -60,7 +60,7 @@ package body LIFX.Messages.StatePower_Messages is
 
    function Create
      (Src      : Message'Class;
-      Level : Interfaces.Unsigned_16)
+      Level    : Interfaces.Unsigned_16)
       return StatePower_Message is
    begin
       return Ret : StatePower_Message do

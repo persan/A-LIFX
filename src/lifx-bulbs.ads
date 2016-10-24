@@ -60,7 +60,7 @@ private
    end record;
 
    procedure On_Message (Self : Bulbs_Record; Message : LIFX.Messages.Message'Class);
---    procedure Initialize (Self : in out Bulbs_Record);
+   --    procedure Initialize (Self : in out Bulbs_Record);
    overriding procedure Finalize (Self : in out Bulbs_Record);
 
 end LIFX.Bulbs;

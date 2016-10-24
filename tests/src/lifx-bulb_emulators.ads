@@ -32,20 +32,24 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with LIFX.Messages.Dispatchers;
-with LIFX.Messages.Lights.State_Messages;
-with LIFX.Messages.StateService_Messages;
 with Ada.Streams;
-with Stream_Tools.Memory_Streams;
+
 with GNAT.Sockets;
-with LIFX.Messages.StateGroup_Messages;
-with LIFX.Messages.StateLocation_Messages;
-with LIFX.Messages.StateHostFirmware_Messages;
 with GNAT.Source_Info;
+
+with LIFX.Messages.Dispatchers;
+with LIFX.Messages.GetService_Messages;
+with LIFX.Messages.Lights.State_Messages;
+with LIFX.Messages.StateGroup_Messages;
+with LIFX.Messages.StateHostFirmware_Messages;
+with LIFX.Messages.StateLocation_Messages;
 with LIFX.Messages.StatePower_Messages;
+with LIFX.Messages.StateService_Messages;
 with LIFX.Messages.StateWifiFirmware_Messages;
 with LIFX.Messages.StateWifiInfo_Messages;
-with LIFX.Messages.GetService_Messages;
+
+with Stream_Tools.Memory_Streams;
+
 package LIFX.Bulb_Emulators is
 
    type Bulb_Emulator is limited new LIFX.Messages.Dispatchers.Message_Handler with record
@@ -92,11 +96,11 @@ package LIFX.Bulb_Emulators is
 
    overriding procedure On_StateHostFirmware
      (Handler : in out Bulb_Emulator;
-      message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message);
+      Message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message);
 
    overriding procedure On_StateWifiFirmware
      (Handler : in out Bulb_Emulator;
-      message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message);
+      Message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message);
 
    overriding procedure On_StateWifiInfo
      (Handler : in out Bulb_Emulator;

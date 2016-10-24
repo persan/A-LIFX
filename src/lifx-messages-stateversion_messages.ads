@@ -53,9 +53,9 @@ package LIFX.Messages.StateVersion_Messages is
 
    function Create
      (Src      : Message'Class;
-      Vendor  : Interfaces.Unsigned_32;
-      Product : Interfaces.Unsigned_32;
-      Version : Interfaces.Unsigned_32)
+      Vendor   : Interfaces.Unsigned_32;
+      Product  : Interfaces.Unsigned_32;
+      Version  : Interfaces.Unsigned_32)
       return StateVersion_Message;
 
 end LIFX.Messages.StateVersion_Messages;

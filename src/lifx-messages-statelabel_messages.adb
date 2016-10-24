@@ -63,14 +63,14 @@ package body LIFX.Messages.StateLabel_Messages is
 
    function Create
      (Src      : Message'Class;
-      Label : String)
+      Label    : String)
       return StateLabel_Message is
    begin
       return Ret : StateLabel_Message do
          Ret.Header.Frame_Address.Sequence := Src.Header.Frame_Address.Sequence;
          Ada.Strings.Fixed.Move
-           (Source => Label,
-            Target  => Ret.Label,
+           (Source   => Label,
+            Target   => Ret.Label,
             Pad      => ' ');
       end return;
    end;

@@ -32,21 +32,25 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Finalization;
+with Ada.Streams;
+
+with GNAT.Sockets;
+with GNAT.Source_Info;
+
 with LIFX.Messages.Dispatchers;
 with LIFX.Messages.Lights.State_Messages;
-with LIFX.Messages.StateService_Messages;
-with Ada.Streams;
-with Stream_Tools.Memory_Streams;
-with GNAT.Sockets;
 with LIFX.Messages.StateGroup_Messages;
-with LIFX.Messages.StateLocation_Messages;
 with LIFX.Messages.StateHostFirmware_Messages;
-with GNAT.Source_Info;
+with LIFX.Messages.StateLocation_Messages;
 with LIFX.Messages.StatePower_Messages;
+with LIFX.Messages.StateService_Messages;
 with LIFX.Messages.StateWifiFirmware_Messages;
 with LIFX.Messages.StateWifiInfo_Messages;
 with LIFX.Messages.Unknown_Messages;
-with Ada.Finalization;
+
+with Stream_Tools.Memory_Streams;
+
 package LIFX.Tests.Applications is
    type Test_App is limited new Ada.Finalization.Limited_Controlled and LIFX.Messages.Dispatchers.Message_Handler with record
       Server            : GNAT.Sockets.Socket_Type;
@@ -60,7 +64,7 @@ package LIFX.Tests.Applications is
    overriding procedure Initialize (Self : in  out Test_App);
 
    not overriding procedure Send (Handler  : in out Test_App;
-                   Message  : LIFX.Messages.Message'Class);
+                                  Message  : LIFX.Messages.Message'Class);
 
    overriding procedure On_State
      (Handler : in out Test_App;
@@ -84,11 +88,11 @@ package LIFX.Tests.Applications is
 
    overriding procedure On_StateHostFirmware
      (Handler : in out Test_App;
-      message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message);
+      Message : LIFX.Messages.StateHostFirmware_Messages.StateHostFirmware_Message);
 
    overriding procedure On_StateWifiFirmware
      (Handler : in out Test_App;
-      message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message);
+      Message : LIFX.Messages.StateWifiFirmware_Messages.StateWifiFirmware_Message);
 
    overriding procedure On_StateWifiInfo
      (Handler : in out Test_App;
@@ -103,14 +107,14 @@ package LIFX.Tests.Applications is
      (Handler : in out Test_App;
       Message : LIFX.Messages.Unknown_Messages.Unknown_Message);
 
---     task type App is new LIFX.Messages.Dispatchers.Message_Handler with
---        entry On_State
---          (Message : LIFX.Messages.Lights.State_Messages.State_Message);
---
---        entry On_StateService
---          (Message : LIFX.Messages.StateService_Messages.StateService_Message);
---
---        entry On_StateGroup
---          (Message : LIFX.Messages.StateGroup_Messages.StateGroup_Message);
---     end App;
+   --     task type App is new LIFX.Messages.Dispatchers.Message_Handler with
+   --        entry On_State
+   --          (Message : LIFX.Messages.Lights.State_Messages.State_Message);
+   --
+   --        entry On_StateService
+   --          (Message : LIFX.Messages.StateService_Messages.StateService_Message);
+   --
+   --        entry On_StateGroup
+   --          (Message : LIFX.Messages.StateGroup_Messages.StateGroup_Message);
+   --     end App;
 end LIFX.Tests.Applications;

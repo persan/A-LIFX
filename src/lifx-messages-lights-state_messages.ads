@@ -45,7 +45,7 @@ package LIFX.Messages.Lights.State_Messages is
    overriding
    function Constructor
      (Params : not null access Ada.Streams.Root_Stream_Type'Class)
-        return State_Message;
+      return State_Message;
 
    overriding
    procedure Initialize (Msg : in out State_Message);

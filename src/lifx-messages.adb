@@ -204,7 +204,7 @@ package body LIFX.Messages is
    begin
       return
         (if  With_Header then
-           ASCII.LF &  "  Frame           => (" & ASCII.LF & Image (Item.Frame) & ")," & ASCII.LF &
+            ASCII.LF &  "  Frame           => (" & ASCII.LF & Image (Item.Frame) & ")," & ASCII.LF &
            "  Frame_Address   => (" & ASCII.LF & Image (Item.Frame_Address) & ")," & ASCII.LF &
            "  Protocol_Header => (" & ASCII.LF & Image (Item.Protocol_Header) & ")"
          else "");

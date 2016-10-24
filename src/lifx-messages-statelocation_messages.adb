@@ -64,7 +64,7 @@ package body LIFX.Messages.StateLocation_Messages is
    end Image;
 
    function Create
-     (Src      : Message'Class;
+     (Src        : Message'Class;
       Location   : String;
       Label      : String;
       Updated_At : Time_Type)

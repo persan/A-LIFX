@@ -33,10 +33,14 @@
 ------------------------------------------------------------------------------
 
 with GNAT.Sockets;
-with LIFX.Messages.GetService_Messages;
+
+with LIFX.Bulb_Store;
 with LIFX.Messages.Dispatchers;
-with Stream_Tools.Memory_Streams;
+with LIFX.Messages.GetService_Messages;
 with LIFX.Messages.Send_Socket;
+
+with Stream_Tools.Memory_Streams;
+
 procedure LIFX.Tests.Applications.Main is
 
    App : LIFX.Tests.Applications.Test_App;
@@ -44,7 +48,7 @@ procedure LIFX.Tests.Applications.Main is
 begin
    LIFX.Messages.Send_Socket
      (App.Server,
-      Item => Messages.GetService_Messages.create,
+      Item => Messages.GetService_Messages.Create,
       To => LIFX_Broadcast_Address'Access);
 
    loop
@@ -55,7 +59,8 @@ begin
          LIFX.Messages.Dispatchers.Dispatch_Message (App, LIFX.Messages.Message'Class'Input (App.S'Access));
       exception
          when GNAT.Sockets.Socket_Error =>
-            LIFX.Messages.Send_Socket (App.Server, Item => Messages.GetService_Messages.create, To => LIFX_Broadcast_Address'Access);
+            LIFX.Messages.Send_Socket (App.Server, Item => Messages.GetService_Messages.Create, To => LIFX_Broadcast_Address'Access);
+            Bulb_Store.Dump;
       end;
    end loop;
 

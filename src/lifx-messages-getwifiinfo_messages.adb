@@ -53,12 +53,12 @@ package body LIFX.Messages.GetWifiInfo_Messages is
       end return;
    end Constructor;
 
-   function create return GetWifiInfo_Message is
+   function Create return GetWifiInfo_Message is
    begin
       return Ret : GetWifiInfo_Message do
          Ret.Header.Frame_Address.Sequence := Sequence;
       end return;
-   end create;
+   end Create;
 
 begin
    Register_Name (Name => LIFX.Messages.Constants.Device_Messages.GetWifiInfo, Object_Tag => GetWifiInfo_Message'Tag);
