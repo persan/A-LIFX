@@ -17,3 +17,5 @@ test:
 install:
 	gprinstall -p -P lifx.gpr
 	
+clean:
+	git clean -Xdf

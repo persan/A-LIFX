@@ -17,3 +17,11 @@ ifeq ("${MAKELEVEL}","0")
 	${MAKE} -C .. ${@}
 else
 endif
+
+
+clean:
+ifeq ("${MAKELEVEL}","0")
+	${MAKE} -C .. ${@}
+else
+endif
+
