@@ -9,9 +9,10 @@ project LIFX.Tests is
    for Object_Dir use ".obj";
    for Exec_Dir use "bin";
    for Source_Dirs use (".", "src/**");
-   for Main use ("lifx-bulb_emulators-main.adb",
-                 "lifx-tests-applications-main.adb");
+   for Main use ("lifx-tests-applications-main.adb");
+   for Main use project'Main & ("lifx-bulb_emulators-main.adb");
 
+   package Builder  renames Lifx.Builder;
    package Compiler renames Lifx.Compiler;
 
    package Binder is

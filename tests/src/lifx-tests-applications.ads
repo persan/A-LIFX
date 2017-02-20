@@ -57,7 +57,7 @@ package LIFX.Tests.Applications is
       Buffer            : Ada.Streams.Stream_Element_Array (1 .. 1024);
       S                 : aliased Stream_Tools.Memory_Streams.Memory_Stream;
       Last              : Ada.Streams.Stream_Element_Offset;
-      From              : aliased GNAT.Sockets.Sock_Addr_Type;
+      From              : GNAT.Sockets.Sock_Addr_Type;
       Addr              : GNAT.Sockets.Sock_Addr_Type;
    end record;
 

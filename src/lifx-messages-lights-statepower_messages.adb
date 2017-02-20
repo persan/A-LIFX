@@ -58,11 +58,11 @@ package body LIFX.Messages.Lights.StatePower_Messages is
         "level => " & Image (Item.Level);
    end Image;
 
-   function Create (Src : Message'Class; Level : Float) return StatePower_Message is
+   function Create (Src : Message'Class; On : Boolean) return StatePower_Message is
    begin
       return Ret : StatePower_Message do
          Ret.Header.Frame_Address.Sequence := Src.Header.Frame_Address.Sequence;
-         Ret.Level := Interfaces.Unsigned_16 (Float (Interfaces.Unsigned_16'Last) * Level);
+         Ret.Level := (if On then Interfaces.Unsigned_16'Last else 0);
       end return;
    end Create;
 

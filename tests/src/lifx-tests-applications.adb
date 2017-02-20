@@ -33,12 +33,10 @@
 ------------------------------------------------------------------------------
 
 with Ada.Calendar;
-with Ada.Strings.Fixed;
-with Ada.Strings;
 
 with Interfaces;
 
-with LIFX.Bulb_Store;
+with LIFX.Bulb;
 with LIFX.Messages.GetGroup_Messages;
 with LIFX.Messages.GetHostFirmware_Messages;
 with LIFX.Messages.GetLocation_Messages;
@@ -47,6 +45,8 @@ with LIFX.Messages.GetWifiInfo_Messages;
 with LIFX.Messages.Lights.Get_Messages;
 with LIFX.Messages.Lights.SetPower_Messages;
 with LIFX.Messages.Send_Socket;
+with Ada.Text_IO; use Ada.Text_IO;
+with GNAT.Time_Stamp;
 
 package body LIFX.Tests.Applications is
    use Interfaces;
@@ -79,38 +79,43 @@ package body LIFX.Tests.Applications is
    begin
       null;
       --  New_Line;
-      --  Put_Line (GNAT.Time_Stamp.Current_Time & " : " & Image (Handler.From) & ":" & Location);
+      Put_Line (GNAT.Time_Stamp.Current_Time & " : " & Image (Handler.From) & ":" & Location);
       --  Put_Line (Message.Image);
    end;
 
    procedure Send (Handler  : in out Test_App;
                    Message  : LIFX.Messages.Message'Class) is
+      From : aliased GNAT.Sockets.Sock_Addr_Type;
    begin
-      LIFX.Messages.Send_Socket (Handler.Server, Item => Message, To => Handler.From'Access);
+      From := Handler.From;
+      LIFX.Messages.Send_Socket (Handler.Server, Item => Message, To => From'Access);
    end;
 
    procedure AppendNode (Node : GNAT.Sockets.Sock_Addr_Type) is
    begin
       if not Bulb_Store.Store.Contains (Node) then
-         Bulb_Store.Store.Insert
-           (Node,
-            New_Item =>
-              ((others => ' '), (others => ' '), (others => ' '),  (others => ' '),  (0.0, 0, 0, 2500), 0.0, Node, Ada.Calendar.Clock));
+         Bulb_Store.Store.Insert (Node, Bulb_Store.Null_Bulb_Info);
+         Bulb_Store.Store (Node).Addr := Node;
       end if;
    end;
    --------------
    -- On_State --
    --------------
-
    overriding procedure On_State
      (Handler : in out Test_App;
       Message : LIFX.Messages.Lights.State_Messages.State_Message)
    is
    begin
-      AppendNode (Handler.From);
-      Bulb_Store.Store (Handler.From).Time := Ada.Calendar.Clock;
-      Ada.Strings.Fixed.Move (Message.Label, Bulb_Store.Store (Handler.From).Label);
       Handler.Log (Message);
+      AppendNode (Handler.From);
+      declare
+         Item : Bulb_Store.Bulb_Info renames Bulb_Store.Store (Handler.From);
+      begin
+         Item.Time := Ada.Calendar.Clock;
+         Item.Label := Message.Label;
+         Item.Color := Message.Color;
+         Item.Power := Float (Message.Power) / 255.0;
+      end;
       if LIFX.Messages.Image (Message.Label) = "Moa:s Rum" then
          delay 0.2;
          Handler.Send (LIFX.Messages.Lights.SetPower_Messages.Create
@@ -149,8 +154,8 @@ package body LIFX.Tests.Applications is
       Message : LIFX.Messages.StateGroup_Messages.StateGroup_Message) is
    begin
       AppendNode (Handler.From);
-      Ada.Strings.Fixed.Move (Message.Location, Bulb_Store.Store (Handler.From).Location);
-      Ada.Strings.Fixed.Move (Message.Group, Bulb_Store.Store (Handler.From).Group);
+      Bulb_Store.Store (Handler.From).Location := Message.Location;
+      Bulb_Store.Store (Handler.From).Group := Message.Group;
       Handler.Log (Message);
       Handler.Send (Messages.GetLocation_Messages.Create);
    end On_StateGroup;
@@ -160,8 +165,8 @@ package body LIFX.Tests.Applications is
       Message : LIFX.Messages.StateLocation_Messages.StateLocation_Message) is
    begin
       AppendNode (Handler.From);
-      Ada.Strings.Fixed.Move (Message.Label, Bulb_Store.Store (Handler.From).Label2);
-      Ada.Strings.Fixed.Move (Message.Location, Bulb_Store.Store (Handler.From).Location);
+      Bulb_Store.Store (Handler.From).Label2 := Message.Label;
+      Bulb_Store.Store (Handler.From).Location2 := Message.Location;
       Handler.Log (Message);
       Handler.Send (Messages.GetHostFirmware_Messages.Create);
    end On_StateLocation;

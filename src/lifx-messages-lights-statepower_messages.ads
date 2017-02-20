@@ -51,6 +51,6 @@ package LIFX.Messages.Lights.StatePower_Messages is
    function Image (Item : StatePower_Message) return String;
 
    function Create
-     (Src : Message'Class; Level : Float) return StatePower_Message;
+     (Src : Message'Class; On : Boolean) return StatePower_Message;
 
 end LIFX.Messages.Lights.StatePower_Messages;

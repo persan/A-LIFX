@@ -34,9 +34,9 @@
 
 package LIFX.Messages.StateVersion_Messages is
    type StateVersion_Message is new Message with record
-      Vendor  : Interfaces.Unsigned_32;
-      Product : Interfaces.Unsigned_32;
-      Version : Interfaces.Unsigned_32;
+      Vendor  : Interfaces.Unsigned_32 := 0;
+      Product : Interfaces.Unsigned_32 := 0;
+      Version : Interfaces.Unsigned_32 := 0;
    end record;
 
    overriding
@@ -57,5 +57,8 @@ package LIFX.Messages.StateVersion_Messages is
       Product  : Interfaces.Unsigned_32;
       Version  : Interfaces.Unsigned_32)
       return StateVersion_Message;
+
+   Null_StateVersion_Message : constant StateVersion_Message :=
+                                 (Message with 0, 0, 0);
 
 end LIFX.Messages.StateVersion_Messages;

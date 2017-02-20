@@ -2,34 +2,37 @@ with "stream_tools";
 
 library project LIFX is
 
-        version := "0.0.1";
-        for Languages use ("Ada", "Makefile","Python","text");
-        for Source_Dirs use (".","src");
-        for Object_Dir use ".obj";
-        for Library_Dir use "lib";
-        for Library_Name use "a-lifx";
+   Version := "0.0.1";
+   for Languages use ("Ada", "Makefile", "Python", "text");
+   for Source_Dirs use (".", "src");
+   for Object_Dir use ".obj";
+   for Library_Dir use "lib";
+   for Library_Name use "a-lifx";
 
-        package compiler is
-                for Driver ("Text") use "";
-                for Driver ("Python") use "";
-                for Driver ("Makefile") use "";
-                for Default_Switches("Ada") use ("-gnatwa","-O2","-gnaty3aAbBcdfhiklnOprtuxM256","-gnat12");
-        end Compiler;
-        package Make is
-                for Makefile use "Makefile";
-        end Make;
+   package Builder is
+      for Default_Switches ("Ada") use ("-s", "-j0");
+   end Builder;
+   package Compiler is
+      for Driver ("Text") use "";
+      for Driver ("Python") use "";
+      for Driver ("Makefile") use "";
+      for Default_Switches ("Ada") use ("-gnatwa", "-O2", "-gnaty3aAbBcdfhiklnOprtuxM256", "-gnat12", "-g");
+   end Compiler;
+   package Make is
+      for Makefile use "Makefile";
+   end Make;
 
-        package Pretty_Printer is
-                for Default_Switches ("ada") use
-                  ("-rf","-M127", "-N", "-c3", "-c4", "-c5", "-A0", "-A2", "-A3", "-A4", "-A5", "-e", "--no-separate-is", "--no-separate-loop-then", "--use-on-new-line", "--separate-stmt-name");
-        end Pretty_Printer;
+   package Pretty_Printer is
+      for Default_Switches ("ada") use
+        ("-rf", "-M127", "-N", "-c3", "-c4", "-c5", "-A0", "-A2", "-A3", "-A4", "-A5", "-e", "--no-separate-is", "--no-separate-loop-then", "--use-on-new-line", "--separate-stmt-name");
+   end Pretty_Printer;
 
-        package Naming is
-                for Implementation_Suffix ("text") use ".text";
-                for Implementation_Suffix ("Python") use ".py";
-                for Implementation_Suffix ("Makefile") use ".mk";
-                for Implementation_Exceptions("Makefile") use ("Makefile");
-                for Implementation_Exceptions("text") use ("README.md");
-        end Naming;
+   package Naming is
+      for Implementation_Suffix ("text") use ".text";
+      for Implementation_Suffix ("Python") use ".py";
+      for Implementation_Suffix ("Makefile") use ".mk";
+      for Implementation_Exceptions ("Makefile") use ("Makefile");
+      for Implementation_Exceptions ("text") use ("README.md");
+   end Naming;
 
 end LIFX;

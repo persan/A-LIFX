@@ -35,7 +35,7 @@
 with Ada.Text_IO;
 
 with GNAT.Time_Stamp;
-
+with Interfaces;
 with LIFX.Messages.GetGroup_Messages;
 with LIFX.Messages.GetHostFirmware_Messages;
 with LIFX.Messages.GetLocation_Messages;
@@ -49,6 +49,7 @@ package body LIFX.Bulb_Emulators is
    use GNAT.Sockets;
    use LIFX.Messages;
    use Ada.Text_IO;
+   use type Interfaces.Unsigned_16;
    ----------------
    -- Initialize --
    ----------------

@@ -34,33 +34,61 @@
 
 with GNAT.Sockets;
 
-with LIFX.Bulb_Store;
 with LIFX.Messages.Dispatchers;
 with LIFX.Messages.GetService_Messages;
 with LIFX.Messages.Send_Socket;
-
+with LIFX.Bulbs;
 with Stream_Tools.Memory_Streams;
+with GNAT.Traceback.Symbolic;
+with GNAT.Exception_Traces;
+with Ada.Text_IO; use Ada.Text_IO;
 
 procedure LIFX.Tests.Applications.Main is
+   use  GNAT.Sockets;
+   Server            : GNAT.Sockets.Socket_Type;
+   Buffer            : Ada.Streams.Stream_Element_Array (1 .. 1024);
+   S                 : aliased Stream_Tools.Memory_Streams.Memory_Stream;
+   Last              : Ada.Streams.Stream_Element_Offset;
+   Addr              : GNAT.Sockets.Sock_Addr_Type;
 
-   App : LIFX.Tests.Applications.Test_App;
-
+   Count             : Natural := 0;
+   Store             : LIFX.Bulbs.Map;
 begin
+   S.Set_Address (Buffer'Address);
+   S.Set_Length (Buffer'Length);
+   Store.From := GNAT.Sockets.No_Sock_Addr;
+   Addr.Addr := Any_Inet_Addr;
+   Addr.Port := LIFX_Port;
+      --        Self.Addr.Port := Any_Port;
+   Create_Socket (Server, Family_Inet, Socket_Datagram);
+   Set_Socket_Option (Server, Option => (Reuse_Address, Enabled => True));
+   Set_Socket_Option (Server, Option => (Broadcast, Enabled => True));
+   Set_Socket_Option (Server, Option => (Receive_Timeout, Timeout => 2.0));
+   Bind_Socket (Server, Addr);
+
+   GNAT.Exception_Traces.Trace_On (GNAT.Exception_Traces.Every_Raise);
+   GNAT.Exception_Traces.Set_Trace_Decorator (GNAT.Traceback.Symbolic.Symbolic_Traceback'Access);
    LIFX.Messages.Send_Socket
-     (App.Server,
+     (Server,
       Item => Messages.GetService_Messages.Create,
       To => LIFX_Broadcast_Address'Access);
 
    loop
       begin
-         App.S.Reset;
-         GNAT.Sockets.Receive_Socket (App.Server, App.Buffer, App.Last, App.From);
-         App.S.Set_Length (App.Last);
-         LIFX.Messages.Dispatchers.Dispatch_Message (App, LIFX.Messages.Message'Class'Input (App.S'Access));
+         S.Reset;
+         GNAT.Sockets.Receive_Socket (Server, Buffer, Last, Store.From);
+         S.Set_Length (Last);
+         LIFX.Messages.Dispatchers.Dispatch_Message (Store, LIFX.Messages.Message'Class'Input (S'Access));
+         Count := Count + 1;
+         if Count > 100 then
+            Count := 0;
+--              Put_Line (Item => Bulb_Store.Images.Image (Store));
+         end if;
       exception
          when GNAT.Sockets.Socket_Error =>
-            LIFX.Messages.Send_Socket (App.Server, Item => Messages.GetService_Messages.Create, To => LIFX_Broadcast_Address'Access);
-            Bulb_Store.Dump;
+            LIFX.Messages.Send_Socket (Server, Item => Messages.GetService_Messages.Create, To => LIFX_Broadcast_Address'Access);
+            Put_Line ("===========================================================================");
+            --  Put_Line (Item => Bulb_Store.Images.Image (Bulb_Store.Store));
       end;
    end loop;
 
